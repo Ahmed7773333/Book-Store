@@ -11,6 +11,10 @@ class GetBestSellBooks extends HomeLayoutEvent {}
 
 class GetNewestBooks extends HomeLayoutEvent {}
 
+class GetBookedBooks extends HomeLayoutEvent {}
+
+class GetCartBooks extends HomeLayoutEvent {}
+
 class SearchForBook extends HomeLayoutEvent {
   final String query;
 

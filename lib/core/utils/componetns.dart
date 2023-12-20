@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -104,6 +106,33 @@ class Componetns {
               image: DecorationImage(
                 image: NetworkImage(url),
                 fit: BoxFit.fill,
+              ),
+            ),
+          );
+  }
+
+  static Widget hiveImage(Uint8List url) {
+    return url.isEmpty
+        ? Container(
+            width: 109.w,
+            height: 145.h,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  AppImages.logo,
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            width: 109.w,
+            height: 145.h,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: MemoryImage(url),
+                fit: BoxFit.fill,
+                filterQuality: FilterQuality.high,
               ),
             ),
           );

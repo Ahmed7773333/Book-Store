@@ -78,6 +78,7 @@ class _HomeLayoutState extends State<HomeLayout> {
 
           // Add more conditions for other statuses if needed
         }, builder: (context, state) {
+          final bloc = HomeLayoutBloc.get(context);
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: PageView(
@@ -87,8 +88,8 @@ class _HomeLayoutState extends State<HomeLayout> {
                     state.searchedBooks ?? [], searchController, () {
                   HomeLayoutBloc.get(context)
                       .add(SearchForBook(query: searchController.text));
-                }),
-                savedTab(),
+                }, bloc),
+                savedTab(bloc.resultBooked),
                 categoriesTab(
                     state.bestSellBooks ?? [], state.newestBooks ?? []),
                 settingsTab(),

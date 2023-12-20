@@ -1,10 +1,16 @@
+import 'dart:typed_data';
+
+import 'package:booh_store_app/core/cache/hive_helper/helper.dart';
+import 'package:booh_store_app/core/cache/marked_db.dart';
 import 'package:booh_store_app/core/utils/app_images.dart';
 import 'package:booh_store_app/core/utils/app_strings.dart';
 import 'package:booh_store_app/core/utils/app_styles.dart';
 import 'package:booh_store_app/core/utils/componetns.dart';
 import 'package:booh_store_app/features/Cart/presentation/pages/cart_page.dart';
+import 'package:booh_store_app/features/Home%20layout/presentation/bloc/home_layout_bloc.dart';
 import 'package:booh_store_app/features/book_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../data/models/book_model.dart';
@@ -15,7 +21,8 @@ Widget homeTab(
     List<Items> newestBooks,
     List<Items> results,
     TextEditingController searchController,
-    VoidCallback onTab) {
+    VoidCallback onTab,
+    HomeLayoutBloc bloc) {
   return SafeArea(
     child: Stack(
       children: [
@@ -125,10 +132,67 @@ Widget homeTab(
                               Positioned(
                                 right: 0,
                                 top: 0,
-                                child: Icon(
-                                  Icons.bookmark_border_outlined,
-                                  color: Colors.black,
-                                  size: 24.r,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    Uint8List image = Uint8List(0);
+                                    if (results[index]
+                                            .volumeInfo
+                                            ?.imageLinks
+                                            ?.thumbnail !=
+                                        null) {
+                                      Uri ul = Uri(
+                                          path: results[index]
+                                              .volumeInfo
+                                              ?.imageLinks
+                                              ?.thumbnail);
+                                      ;
+                                      final ByteData bytes =
+                                          await NetworkAssetBundle(ul).load(
+                                              results[index]
+                                                      .volumeInfo
+                                                      ?.imageLinks
+                                                      ?.thumbnail ??
+                                                  '');
+
+                                      image = bytes.buffer.asUint8List();
+                                    }
+                                    MarkedDbHelper.add(
+                                      MarkedDb(
+                                        isBooked: true,
+                                        title:
+                                            results[index].volumeInfo?.title ??
+                                                '',
+                                        description: results[index]
+                                                .volumeInfo
+                                                ?.description ??
+                                            '',
+                                        averageRating: results[index]
+                                                .volumeInfo
+                                                ?.averageRating ??
+                                            0,
+                                        author: results[index]
+                                                .volumeInfo
+                                                ?.authors
+                                                ?.first ??
+                                            '',
+                                        currencyCode: results[index]
+                                                .saleInfo
+                                                ?.listPrice
+                                                ?.currencyCode ??
+                                            'EGP',
+                                        amount: results[index]
+                                            .saleInfo
+                                            ?.listPrice
+                                            ?.amount,
+                                        thumbnail: image,
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.bookmark_border_outlined,
+                                    color: Colors.black,
+                                    size: 24.r,
+                                  ),
                                 ),
                               ),
                               Positioned(

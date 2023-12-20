@@ -11,6 +11,8 @@ enum ScreenStatus {
   newestBooksError,
   searchedBookssSuccess,
   searchedBooksError,
+  getMarked,
+  getcarted,
 }
 
 @immutable
