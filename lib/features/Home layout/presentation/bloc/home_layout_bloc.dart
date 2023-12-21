@@ -14,8 +14,18 @@ part 'home_layout_state.dart';
 class HomeLayoutBloc extends Bloc<HomeLayoutEvent, HomeLayoutState> {
   static HomeLayoutBloc get(context) => BlocProvider.of(context);
   GetBooksUsecase getBooksUsecase;
-  List<MarkedDb> resultBooked = [];
-  List<MarkedDb> resultCart = [];
+  List<MarkedDb> resultBooked = MarkedDbHelper.getAll()
+          .where((element) => element.isBooked)
+          .toList()
+          .isEmpty
+      ? []
+      : MarkedDbHelper.getAll().where((element) => element.isBooked).toList();
+  List<MarkedDb> resultCart = MarkedDbHelper.getAll()
+          .where((element) => !element.isBooked)
+          .toList()
+          .isEmpty
+      ? []
+      : MarkedDbHelper.getAll().where((element) => !element.isBooked).toList();
 
   HomeLayoutBloc(this.getBooksUsecase) : super(HomeLayoutInitial()) {
     on<HomeLayoutEvent>((event, emit) async {

@@ -1,15 +1,22 @@
+import 'dart:typed_data';
+
 import 'package:booh_store_app/core/utils/componetns.dart';
 import 'package:booh_store_app/features/Home%20layout/data/models/book_model.dart';
+import 'package:booh_store_app/features/Home%20layout/presentation/bloc/home_layout_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/cache/hive_helper/helper.dart';
+import '../../../../core/cache/marked_db.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../book_details.dart';
+import '../pages/home_tab.dart';
 
 Widget emptySearch(
   List<Items> bestSellBooks,
   List<Items> newestBooks,
+  HomeLayoutBloc bloc,
 ) {
   return Stack(
     children: [
@@ -68,7 +75,7 @@ Widget emptySearch(
         left: 28.w,
         child: SizedBox(
           height: 328.h,
-          width: 380.w,
+          width: 300.w,
           child: ListView.separated(
             itemBuilder: (context, index) {
               return Componetns.openContainers(
@@ -107,10 +114,59 @@ Widget emptySearch(
                       Positioned(
                         right: 0,
                         top: 0,
-                        child: Icon(
-                          Icons.bookmark_border_outlined,
+                        child: IconButton(
                           color: Colors.black,
-                          size: 24.r,
+                          onPressed: () async {
+                            Uint8List image = Uint8List(0);
+                            if ((newestBooks[index]
+                                        .volumeInfo
+                                        ?.imageLinks
+                                        ?.thumbnail ??
+                                    '') !=
+                                '') {
+                              image = await loadImage(newestBooks[index]
+                                      .volumeInfo
+                                      ?.imageLinks
+                                      ?.thumbnail ??
+                                  '');
+                            }
+                            MarkedDbHelper.add(
+                              MarkedDb(
+                                isBooked: true,
+                                title:
+                                    newestBooks[index].volumeInfo?.title ?? '',
+                                description: newestBooks[index]
+                                        .volumeInfo
+                                        ?.description ??
+                                    '',
+                                averageRating: newestBooks[index]
+                                        .volumeInfo
+                                        ?.averageRating ??
+                                    0,
+                                author: newestBooks[index]
+                                        .volumeInfo
+                                        ?.authors
+                                        ?.first ??
+                                    '',
+                                currencyCode: newestBooks[index]
+                                        .saleInfo
+                                        ?.listPrice
+                                        ?.currencyCode ??
+                                    'EGP',
+                                amount: newestBooks[index]
+                                    .saleInfo
+                                    ?.listPrice
+                                    ?.amount,
+                                thumbnail: image,
+                              ),
+                            );
+                            bloc.add(GetBookedBooks());
+                          },
+                          icon: Icon(
+                            Icons.bookmark_border_outlined,
+                            color: Colors.black,
+                            size: 35.r,
+                          ),
                         ),
                       ),
                       Positioned(

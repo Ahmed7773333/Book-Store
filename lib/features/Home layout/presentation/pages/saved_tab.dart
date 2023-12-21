@@ -11,6 +11,7 @@ import '../../../book_details.dart';
 
 Widget savedTab(
   List<MarkedDb> results,
+  bloc,
 ) {
   return Scaffold(
     appBar: AppBar(
@@ -78,6 +79,7 @@ Widget savedTab(
             ),
             openedWidget: HiveBookDetails(
               book: results[index],
+              bloc: bloc,
             ),
           );
         },

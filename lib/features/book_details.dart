@@ -5,9 +5,11 @@ import 'package:booh_store_app/core/utils/app_strings.dart';
 import 'package:booh_store_app/core/utils/app_styles.dart';
 import 'package:booh_store_app/core/utils/componetns.dart';
 import 'package:booh_store_app/features/Home%20layout/data/models/book_model.dart';
+import 'package:booh_store_app/features/Home%20layout/presentation/bloc/home_layout_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../core/cache/hive_helper/helper.dart';
 import '../core/utils/app_images.dart';
 
 class BookDetails extends StatelessWidget {
@@ -106,9 +108,10 @@ class BookDetails extends StatelessWidget {
 }
 
 class HiveBookDetails extends StatelessWidget {
-  const HiveBookDetails({super.key, required this.book});
+  const HiveBookDetails({super.key, required this.book, required this.bloc});
 
   final MarkedDb book;
+  final HomeLayoutBloc bloc;
   @override
   Widget build(BuildContext context) {
     Uint8List url = book.thumbnail ?? Uint8List(0);
@@ -176,7 +179,25 @@ class HiveBookDetails extends StatelessWidget {
               ),
               SizedBox(height: 17.h),
               FilledButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Uint8List image = Uint8List(0);
+                  if (book.thumbnail != Uint8List(0)) {
+                    image = book.thumbnail ?? Uint8List(0);
+                  }
+                  MarkedDbHelper.add(
+                    MarkedDb(
+                      isBooked: false,
+                      title: book.title ?? '',
+                      description: book.description ?? '',
+                      averageRating: book.averageRating ?? 0,
+                      author: book.author ?? '',
+                      currencyCode: book.currencyCode ?? 'EGP',
+                      amount: book.amount,
+                      thumbnail: image,
+                    ),
+                  );
+                  bloc.add(GetCartBooks());
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

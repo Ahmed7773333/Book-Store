@@ -84,12 +84,12 @@ class _HomeLayoutState extends State<HomeLayout> {
             body: PageView(
               controller: _pageController,
               children: [
-                homeTab(state.bestSellBooks ?? [], state.newestBooks ?? [],
+                HomeTab(state.bestSellBooks ?? [], state.newestBooks ?? [],
                     state.searchedBooks ?? [], searchController, () {
                   HomeLayoutBloc.get(context)
                       .add(SearchForBook(query: searchController.text));
                 }, bloc),
-                savedTab(bloc.resultBooked),
+                savedTab(bloc.resultBooked, bloc),
                 categoriesTab(
                     state.bestSellBooks ?? [], state.newestBooks ?? []),
                 settingsTab(),
