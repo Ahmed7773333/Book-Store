@@ -32,6 +32,7 @@ class HomeLayoutBloc extends Bloc<HomeLayoutEvent, HomeLayoutState> {
       if (event is GetBestSellBooks) {
         emit(state.copWith(status: ScreenStatus.homeLoading));
         var result = await getBooksUsecase('Harry Potter&maxResults=40');
+
         result.fold((l) {
           emit(state.copWith(
               status: ScreenStatus.bestSellBooksError, failures: l));
@@ -54,6 +55,7 @@ class HomeLayoutBloc extends Bloc<HomeLayoutEvent, HomeLayoutState> {
       } else if (event is GetNewestBooks) {
         emit(state.copWith(status: ScreenStatus.homeLoading));
         var result = await getBooksUsecase('2021&maxResults=40');
+
         result.fold((l) {
           emit(state.copWith(
               status: ScreenStatus.newestBooksError, failures: l));

@@ -42,26 +42,11 @@ class _HomeLayoutState extends State<HomeLayout> {
           if (state.status == ScreenStatus.searchedBooksError) {
             state.searchedBooks = [];
           }
-          if (state.status == ScreenStatus.homeLoading) {
-            showDialog(
-              context: context,
-              builder: (context) => const AlertDialog(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                title: Center(
-                    child: CircularProgressIndicator(
-                  color: Colors.blue,
-                )),
-              ),
-            );
-          }
+          if (state.status == ScreenStatus.homeLoading) {}
           if (state.status == ScreenStatus.newestBookssSuccess ||
-              state.status == ScreenStatus.bestSellBookssSuccess) {
-            Navigator.pop(context);
-          }
+              state.status == ScreenStatus.bestSellBookssSuccess) {}
           if (state.status == ScreenStatus.bestSellBooksError ||
               state.status == ScreenStatus.newestBooksError) {
-            Navigator.pop(context);
             showDialog(
               context: context,
               builder: (context) => const AlertDialog(
